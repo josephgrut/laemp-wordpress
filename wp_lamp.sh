@@ -594,39 +594,22 @@ GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost';
 ALTER DATABASE $db_name CHARACTER SET utf8 COLLATE utf8_general_ci;
 EOF
 
-cat >/var/www/$username/$websitename/www/wp-config.php <<EOL
-<?php
+##create wp config
+cd /var/www/$username/$websitename/www/
+cp wp-config-sample.php wp-config.php
+perl -pi -e "s/database_name_here/$dbname/g" wp-config.php
+perl -pi -e "s/username_here/$dbuser/g" wp-config.php
+perl -pi -e "s/password_here/$dbpass/g" wp-config.php
 
-define('DB_NAME', '$db_name');
-
-define('DB_USER', '$db_user');
-
-define('DB_PASSWORD', '$db_pass');
-
-define('DB_HOST', 'localhost');
-
-define('DB_CHARSET', 'utf8');
-
-define('DB_COLLATE', '');
-
-define('AUTH_KEY',         '$db_user');
-define('SECURE_AUTH_KEY',  '$db_user');
-define('LOGGED_IN_KEY',    '$db_user');
-define('NONCE_KEY',        '$db_user');
-define('AUTH_SALT',        '$db_user');
-define('SECURE_AUTH_SALT', '$db_user');
-define('LOGGED_IN_SALT',   '$db_user');
-define('NONCE_SALT',       '$db_user');
-
-\$table_prefix  = 'wp_';
-
-define('WP_DEBUG', false);
-
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
-
-require_once(ABSPATH . 'wp-settings.php');
-EOL
+#set WP salts
+perl -i -pe'
+  BEGIN {
+    @chars = ("a" .. "z", "A" .. "Z", 0 .. 9);
+    push @chars, split //, "!@#$%^&*()-_ []{}<>~\`+=,.;:/?|";
+    sub salt { join "", map $chars[ rand @chars ], 1 .. 64 }
+  }
+  s/put your unique phrase here/salt()/ge
+' wp-config.php
 
 chown -R $username:$username /var/www/$username
 echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
