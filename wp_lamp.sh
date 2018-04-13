@@ -597,9 +597,9 @@ EOF
 ##create wp config
 cd /var/www/$username/$websitename/www/
 cp wp-config-sample.php wp-config.php
-perl -pi -e "s/database_name_here/$dbname/g" wp-config.php
-perl -pi -e "s/username_here/$dbuser/g" wp-config.php
-perl -pi -e "s/password_here/$dbpass/g" wp-config.php
+perl -pi -e "s/database_name_here/$db_name/g" wp-config.php
+perl -pi -e "s/username_here/$db_user/g" wp-config.php
+perl -pi -e "s/password_here/$db_pass/g" wp-config.php
 
 #set WP salts
 perl -i -pe'
