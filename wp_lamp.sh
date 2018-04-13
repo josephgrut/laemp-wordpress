@@ -611,8 +611,10 @@ perl -i -pe'
   }
   s/put your unique phrase here/salt()/ge
 ' wp-config.php
+echo "define('FS_METHOD', 'direct');" >> wp-config.php
 
-chown -R $username:$username /var/www/$username
+chown -R $username:www-data /var/www/$username
+chmod -R g+w /var/www/$username/$websitename/www/wp-content
 echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
 sleep 3
 echo -e "Installation & configuration succesfully finished.
