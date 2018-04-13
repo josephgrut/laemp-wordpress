@@ -228,7 +228,7 @@ echo -e "${YELLOW}Adding separate user & creating website home folder for secure
   groupadd $username
   adduser --home /var/www/$username/$websitename --ingroup $username $username
   mkdir /var/www/$username/$websitename/www
-  chown -R $username:$username /var/www/$username/$websitename
+  chown -R $username:www-data /var/www/$username/$websitename
   echo -e "${GREEN}User, group and home folder were succesfully created!
   Username: $username
   Group: $username
@@ -613,7 +613,7 @@ perl -i -pe'
 ' wp-config.php
 echo "define('FS_METHOD', 'direct');" >> wp-config.php
 
-chown -R $username:www-data /var/www/$username
+#chown -R $username:www-data /var/www/$username
 chmod -R g+w /var/www/$username/$websitename/www/wp-content
 echo -e "${GREEN}Database user, database and wp-config.php were succesfully created & configured!${NC}"
 sleep 3
