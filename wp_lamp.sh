@@ -42,7 +42,7 @@ ZIP=$(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed")
   if [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 0 ];
   then
     echo -e "${YELLOW}Installing zip${NC}"
-    apt-get install zip --yes;
+    apt-get install zip unzip --yes;
     elif [ $(dpkg-query -W -f='${Status}' zip 2>/dev/null | grep -c "ok installed") -eq 1 ];
     then
       echo -e "${GREEN}zip is installed!${NC}"
@@ -82,7 +82,7 @@ APACHE2=$(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok install
   if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
   then
     echo -e "${YELLOW}Installing apache2${NC}"
-    apt-get install apache2 php5 --yes;
+    apt-get install apache2 php --yes;
     elif [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 1 ];
     then
       echo -e "${GREEN}apache2 is installed!${NC}"
@@ -98,14 +98,14 @@ MYSQL=$(dpkg-query -W -f='${Status}' mysql-server 2>/dev/null | grep -c "ok inst
       echo -e "${GREEN}mysql-server is installed!${NC}"
   fi
 
-PHP5CURL=$(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed")
-  if [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
+PHP5CURL=$(dpkg-query -W -f='${Status}' php-curl 2>/dev/null | grep -c "ok installed")
+  if [ $(dpkg-query -W -f='${Status}' php-curl 2>/dev/null | grep -c "ok installed") -eq 0 ];
   then
-    echo -e "${YELLOW}Installing php5-curl${NC}"
-    apt-get install php5-curl --yes;
-    elif [ $(dpkg-query -W -f='${Status}' php5-curl 2>/dev/null | grep -c "ok installed") -eq 1 ];
+    echo -e "${YELLOW}Installing php-curl${NC}"
+    apt-get install php-curl --yes;
+    elif [ $(dpkg-query -W -f='${Status}' php-curl 2>/dev/null | grep -c "ok installed") -eq 1 ];
     then
-      echo -e "${GREEN}php5-curl is installed!${NC}"
+      echo -e "${GREEN}php-curl is installed!${NC}"
   fi
 
 PHPMYADMIN=$(dpkg-query -W -f='${Status}' phpmyadmin 2>/dev/null | grep -c "ok installed")
@@ -581,20 +581,23 @@ sleep 3
 echo -e "${GREEN}Adding user & database for WordPress, setting wp-config.php...${NC}"
 echo -e "Please, set username for database: "
 read db_user
-echo -e "Please, set password for database user: "
+echo -e "Please, set password for db user: "
 read db_pass
+echo -e "Please, set name for database: "
+read db_name
+
 
 mysql -u root -p <<EOF
 CREATE USER '$db_user'@'localhost' IDENTIFIED BY '$db_pass';
-CREATE DATABASE IF NOT EXISTS $db_user;
-GRANT ALL PRIVILEGES ON $db_user.* TO '$db_user'@'localhost';
-ALTER DATABASE $db_user CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE IF NOT EXISTS $db_name;
+GRANT ALL PRIVILEGES ON $db_name.* TO '$db_user'@'localhost';
+ALTER DATABASE $db_name CHARACTER SET utf8 COLLATE utf8_general_ci;
 EOF
 
 cat >/var/www/$username/$websitename/www/wp-config.php <<EOL
 <?php
 
-define('DB_NAME', '$db_user');
+define('DB_NAME', '$db_name');
 
 define('DB_USER', '$db_user');
 
