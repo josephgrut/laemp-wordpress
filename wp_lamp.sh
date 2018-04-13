@@ -82,7 +82,7 @@ APACHE2=$(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok install
   if [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 0 ];
   then
     echo -e "${YELLOW}Installing apache2${NC}"
-    apt-get install apache2 php --yes;
+    apt-get install apache2 php libapache2-mod-php7.0 --yes;
     elif [ $(dpkg-query -W -f='${Status}' apache2 2>/dev/null | grep -c "ok installed") -eq 1 ];
     then
       echo -e "${GREEN}apache2 is installed!${NC}"
@@ -568,6 +568,7 @@ EOL
 a2dismod status
 a2enmod rewrite
 a2enmod ssl
+a2enmod php7.0
 
 echo -e "${GREEN}Configuration of apache mods was succesfully finished!
 Restarting Apache & MySQL services...${NC}"
